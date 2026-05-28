@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:150.0) Gecko/20100101 Firefox/150.0" version="29.6.1">
+  <diagram name="Page-1" id="SbtpS-X9ng0CNOB3HamC">
+    <mxGraphModel dx="1025" dy="1162" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_keMFK6TzVjRuQXcBwny-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="main" vertex="1">
+          <mxGeometry height="80" width="120" x="340" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="switch interface" vertex="1">
+          <mxGeometry height="80" width="120" x="220" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="memory interface" vertex="1">
+          <mxGeometry height="80" width="120" x="460" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="display interface" vertex="1">
+          <mxGeometry height="80" width="120" x="220" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="sound interface" vertex="1">
+          <mxGeometry height="80" width="120" x="460" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-6" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-2" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="_keMFK6TzVjRuQXcBwny-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-9" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="_keMFK6TzVjRuQXcBwny-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="push buttons" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="SD card reader" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-12" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-10" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_keMFK6TzVjRuQXcBwny-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-13" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-11" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_keMFK6TzVjRuQXcBwny-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-14" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-1" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_keMFK6TzVjRuQXcBwny-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-15" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_keMFK6TzVjRuQXcBwny-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="450" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-16" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-4" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="280" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="LCD screen" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-18" edge="1" parent="1" source="_keMFK6TzVjRuQXcBwny-5" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint" />
+            <mxPoint x="520" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_keMFK6TzVjRuQXcBwny-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="sound hardware" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="720" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
