@@ -16,3 +16,31 @@ int sd_Init(void) {
   return 0;
 }
 
+int sd_ListDir(const char* path, SDItem* items, int maxItems) {
+  int count = 0;
+
+  // Add ".." for non-root directories
+  if (strcmp(path, "/") != 0 && count < maxItems) {
+    items[count].name = "..";
+    items[count].type = ITEM_DIR;
+    count++;
+  }
+
+  File root = SD.open(path);
+  if (!root || !root.isDirectory()) {
+    return count;
+  }
+
+  File entry = root.openNextFile();
+  while (entry && count < maxItems) {
+    items[count].name = String(entry.name());
+    items[count].type = entry.isDirectory() ? ITEM_DIR : ITEM_FILE;
+    count++;
+    entry.close();
+    entry = root.openNextFile();
+  }
+  root.close();
+
+  return count;
+}
+

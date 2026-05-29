@@ -1,5 +1,7 @@
 #include "sdCard.h"
 #include "display.h"
+#include "switch.h"
+#include "browser.h";
 
 #include <SPI.h>
 #include <SD.h>
@@ -17,18 +19,15 @@ void setup() {
   // initialize shared SPI bus
   SPI.begin(D8, D9, D10);
 
-  // initialize display
   display_Init();
-
-  display_Print("Initializing SD card... ");
-
+  display_Print("Init SD card... ");
   if (sd_Init() != 0) {
-    display_Print("initialization failed!\n");
+    display_Print("fail!\n");
     while (1);
   }
-  display_Print("initialization done.\n");
+  display_Print("done.\n");
   
-
+  /*
   // open file
   myFile = SD.open("/hello.txt", FILE_WRITE);
 
@@ -56,11 +55,46 @@ void setup() {
   } else { // file failed to open
     display_Print("error opening hello.txt!\n");
   }
+  */
 
+  display_Print("Init switches... ");
+  switch_Init();
+  display_Print("done.\n");
+  // while (1);
+  display_Clear();
 
+/*
+  SDItem items[20];
+  int len = sd_ListDir("/", items, 20);
+  for (int i = 0; i < 20; i++) {
+    if (items[i].type == ITEM_DIR) // print dirs in green
+      display_Print(items[i].name, ST77XX_GREEN);
+    else
+      display_Print(items[i].name);
+
+    display_Print("\n");
+  }
+*/
+  browser_Init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  // handle switches
+  switch_Update();
+  browser_HandleEvent(switch_GetEvent());
+  /*
+  SwitchEvent e = switch_GetEvent();
+  switch (e) {
+    case SWITCH_ENTER:
+      Serial.println("enter");
+      break;
+    case SWITCH_DOWN:
+      Serial.println("down");
+      break;
+    case SWITCH_NONE:
+    default:
+      break;
+  }
+  */
 
 }
