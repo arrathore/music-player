@@ -45,5 +45,5 @@ void display_Init(void) {
 
   digitalWrite(TFT_CS, HIGH); // deassert TFT CS
   
-  display_Print("ST7735R init success", ST77XX_CYAN);
+  display_Print("ST7735R init success\n", ST77XX_CYAN);
 }

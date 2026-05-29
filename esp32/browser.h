@@ -15,7 +15,7 @@
 void browser_Init(void);
 
 // Draw a given line in directory listing
-void browser_DrawLine(int line);
+// void browser_DrawLine(int line);
 
 // Draw the entire screen
 void browser_DrawScreen(void);

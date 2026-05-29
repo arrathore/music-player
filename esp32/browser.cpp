@@ -18,12 +18,12 @@ static void loadDirectory(const char* path) {
 }
 
 // draw the header at the top of the screen displaying the current path
-void browser_DrawHeader(void) {
+static void drawHeader(void) {
   display_SetCursor(0, 0);
   display_Print(currentPath, ST77XX_YELLOW);
 }
 
-void browser_DrawLine(int line) {
+static void drawLine(int line) {
   // line = screen line
   if (line < 1) return; // 1st line is first in file list, line 0 is header
   
@@ -44,31 +44,73 @@ void browser_DrawLine(int line) {
 }
 
 void browser_DrawScreen(void) {
-  browser_DrawHeader();
+  display_Clear();
+  
+  drawHeader();
   for (int i = 1; i <= itemCount; i++) {
-    browser_DrawLine(i);
+    drawLine(i);
   }
 }
 
 void browser_Init(void) {
   loadDirectory("/");
-  currentPath[0] = '/';
+  currentPath[0] = '/'; currentPath[1] = '\0';
   browser_DrawScreen();
 }
 
-void browser_CursorDown(void) {
+
+// set currentPath to a directory name under the current directory
+// cd name
+static void buildChildPath(const char* name) {
+  char temp[256];
+  if (strcmp(currentPath, "/") == 0)
+    snprintf(temp, sizeof(temp), "/%s", name);
+  else
+    snprintf(temp, sizeof(temp), "%s/%s", currentPath, name);
+ 
+  strncpy(currentPath, temp, sizeof(currentPath) - 1);
+  currentPath[sizeof(currentPath) - 1] = '\0';
+}
+
+// set currentPath to the parent pathname
+// cd ..
+static void buildParentPath(void) {
+  char* lastSlash = strrchr(currentPath, '/');
+  if (lastSlash == currentPath) // parent is root
+    currentPath[1] = '\0';
+  else if (lastSlash != nullptr)
+    *lastSlash = '\0';
+}
+
+static void enter(void) {
+  SDItem selection = items[selectedIdx - 1];
+  if (selection.type == ITEM_FILE) {
+    // TODO
+  } else { // directory
+    if (selection.name == "..") {
+      buildParentPath(); // cd ..
+    } else {
+      buildChildPath(selection.name.c_str()); // cd selection
+    }
+
+    loadDirectory(currentPath);
+    browser_DrawScreen();
+  }
+}
+
+static void cursorDown(void) {
   if (selectedIdx >= itemCount) {
     selectedIdx = 1;
     // redraw old line
-    browser_DrawLine(itemCount);
+    drawLine(itemCount);
   } else {
     selectedIdx++;
     // redraw old line
-    browser_DrawLine(selectedIdx - 1);
+    drawLine(selectedIdx - 1);
   }
 
   // redraw new line
-  browser_DrawLine(selectedIdx);
+  drawLine(selectedIdx);
   Serial.print(selectedIdx);
   Serial.print("/");
   Serial.println(itemCount);
@@ -77,10 +119,10 @@ void browser_CursorDown(void) {
 void browser_HandleEvent(SwitchEvent e) {
   switch (e) {
     case SWITCH_DOWN:
-      browser_CursorDown();
+      cursorDown();
       break;
     case SWITCH_ENTER:
-      // TODO
+      enter();
       break;
     default:
       break;
