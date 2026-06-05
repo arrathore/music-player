@@ -94,6 +94,7 @@ static void enter(void) {
     }
 
     loadDirectory(currentPath);
+    selectedIdx = 1;
     browser_DrawScreen();
   }
 }
