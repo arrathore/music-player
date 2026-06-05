@@ -1,4 +1,5 @@
 #include "switch.h"
+#include "pins.h"
 
 #include <Arduino.h>
 #include <esp_system.h>
@@ -57,9 +58,9 @@ SwitchEvent switch_GetEvent(void) {
 }
 
 void switch_Init(void) {
-  pinMode(D4, INPUT_PULLDOWN);
-  attachInterrupt(D4, enterISR, FALLING);
-  pinMode(D5, INPUT_PULLDOWN);
-  attachInterrupt(D5, downISR, FALLING);
+  pinMode(PIN_BTN_ENTER, INPUT_PULLDOWN);
+  attachInterrupt(PIN_BTN_ENTER, enterISR, FALLING);
+  pinMode(PIN_BTN_DOWN, INPUT_PULLDOWN);
+  attachInterrupt(PIN_BTN_DOWN, downISR, FALLING);
 }
 

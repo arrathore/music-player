@@ -1,7 +1,8 @@
 #include "sdCard.h"
 #include "display.h"
 #include "switch.h"
-#include "browser.h";
+#include "browser.h"
+#include "pins.h"
 
 #include <SPI.h>
 #include <SD.h>
@@ -17,46 +18,20 @@ void setup() {
   while (!Serial);
 
   // initialize shared SPI bus
-  SPI.begin(D8, D9, D10);
+  SPI.begin(PIN_SPI_SCK, PIN_SPI_MISO, PIN_SPI_MOSI);
 
+  // initialize display
   display_Init();
+
+  // initialize sd card reader
   display_Print("Init SD card... ");
   if (sd_Init() != 0) {
     display_Print("fail!\n");
     while (1);
   }
   display_Print("done.\n");
-  
-  /*
-  // open file
-  myFile = SD.open("/hello.txt", FILE_WRITE);
 
-  if (myFile) {
-    display_Print("Writing to hello.txt... ");
-    myFile.println("hello from esp32!");
-    // close file
-    myFile.close();
-    display_Print("done.\n");
-  } else { // file failed to open
-    display_Print("error opening hello.txt!\n");
-  }
-
-  // re-open file for reading
-  myFile = SD.open("/hello.txt");
-  if (myFile) {
-    display_Print("hello.txt:\n");
-
-    // read entire file
-    while (myFile.available()) {
-      Serial.write(myFile.read());
-    }
-    // close file
-    myFile.close();
-  } else { // file failed to open
-    display_Print("error opening hello.txt!\n");
-  }
-  */
-
+  // initialize switches
   display_Print("Init switches... ");
   switch_Init();
   display_Print("done.\n");
