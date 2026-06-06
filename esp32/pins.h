@@ -38,6 +38,11 @@
   #define PIN_BTN_ENTER 32
   #define PIN_BTN_DOWN  33
 
+  // I2S
+  #define PIN_I2S_BCLK  26
+  #define PIN_I2S_LRCLK 25
+  #define PIN_I2S_DATA  27
+
 #else
   #error "Unknown board - add pin definitions to pins.h"
 #endif
