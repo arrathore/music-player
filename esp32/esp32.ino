@@ -23,7 +23,7 @@ void setup() {
   // initialize display
   display_Init();
 
-  // initialize sd card reader
+  // initialize sd card reader 
   display_Print("Init SD card... ");
   if (sd_Init() != 0) {
     display_Print("fail!\n");

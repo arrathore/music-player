@@ -1,4 +1,5 @@
 #include "display.h"
+#include "pins.h"
 
 #include <Arduino.h>
 #include <esp_system.h>
@@ -7,14 +8,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
-// --- Pin definitions ---
-#define SD_CS   D3
-#define TFT_CS  D2
-#define TFT_DC  D1
-#define TFT_RST D0
-
 // display object
-Adafruit_ST7735 tft = Adafruit_ST7735(&SPI, TFT_CS, TFT_DC, TFT_RST);
+Adafruit_ST7735 tft = Adafruit_ST7735(&SPI, PIN_TFT_CS, PIN_TFT_DC, PIN_TFT_RST);
 
 void display_Print(const String &msg, uint16_t color) {
   //  Serial.println(msg);
@@ -43,7 +38,7 @@ void display_Init(void) {
   tft.setTextSize(1);
   display_SetCursor(0, 0);
 
-  digitalWrite(TFT_CS, HIGH); // deassert TFT CS
+  digitalWrite(PIN_TFT_CS, HIGH); // deassert TFT CS
   
   display_Print("ST7735R init success\n", ST77XX_CYAN);
 }

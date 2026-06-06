@@ -15,8 +15,8 @@ typedef struct {
 } Switch;
 
 static Switch switches[] = {
-  { D4, SWITCH_ENTER, false, 0 },
-  { D5, SWITCH_DOWN, false, 0},
+  { PIN_BTN_ENTER, SWITCH_ENTER, false, 0 },
+  { PIN_BTN_DOWN, SWITCH_DOWN, false, 0},
 };
 static const int NUM_SWITCHES = sizeof(switches) / sizeof(switches[0]);
 
