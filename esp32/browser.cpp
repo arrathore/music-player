@@ -2,6 +2,7 @@
 #include "display.h"
 #include "sdCard.h"
 #include "switch.h"
+#include "player.h"
 
 #include <Arduino.h>
 #include <esp_system.h>
@@ -72,6 +73,15 @@ static void buildChildPath(const char* name) {
   currentPath[sizeof(currentPath) - 1] = '\0';
 }
 
+// get the child path without changing directory
+static void buildChildPath(const char* name, char* out, size_t outSize) {
+  if (strcmp(currentPath, "/") == 0) {
+    snprintf(out, outSize, "/%s", name);
+  } else {
+    snprintf(out, outSize, "%s/%s", currentPath, name);
+  }
+}
+
 // set currentPath to the parent pathname
 // cd ..
 static void buildParentPath(void) {
@@ -83,9 +93,13 @@ static void buildParentPath(void) {
 }
 
 static void enter(void) {
+  Serial.println("[browser] got enter");
   SDItem selection = items[selectedIdx - 1];
   if (selection.type == ITEM_FILE) {
-    // TODO
+    char fullPath[256];
+    buildChildPath(selection.name.c_str(), fullPath, sizeof(fullPath));
+    Serial.printf("[browser] now opening %s in player\n", fullPath);
+    player_Open(fullPath);
   } else { // directory
     if (selection.name == "..") {
       buildParentPath(); // cd ..
@@ -112,9 +126,11 @@ static void cursorDown(void) {
 
   // redraw new line
   drawLine(selectedIdx);
+  /*
   Serial.print(selectedIdx);
   Serial.print("/");
   Serial.println(itemCount);
+  */
 }
 
 void browser_HandleEvent(SwitchEvent e) {
