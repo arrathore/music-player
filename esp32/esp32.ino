@@ -1,10 +1,3 @@
-#include "sdCard.h"
-#include "display.h"
-#include "switch.h"
-#include "browser.h"
-#include "pins.h"
-#include "player.h"
-
 #include <SPI.h>
 #include <SD.h>
 
@@ -13,6 +6,14 @@
 
 #include <math.h>
 #include <driver/i2s.h>
+
+#include "sdCard.h"
+#include "display.h"
+#include "switch.h"
+#include "browser.h"
+#include "pins.h"
+#include "player.h"
+#include "appManager.h"
 
 void setup() {
   // init serial communication
@@ -49,13 +50,15 @@ void setup() {
   // while (1);
   display_Clear();
 
-  browser_Init();
+  appManager_Init();
   
 }
 
 void loop() {
   // handle switches
   switch_Update();
-  player_Update();
-  browser_HandleEvent(switch_GetEvent());
+  player_Update(); // player service
+
+  // application manager
+  appManager_HandleEvent(switch_GetEvent());
 }

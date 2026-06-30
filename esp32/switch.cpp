@@ -41,11 +41,11 @@ void switch_Update(void) {
     if (switches[i].triggered) {
       // wait for debounce window
       if (millis() - switches[i].triggerTime >= DEBOUNCE_MS) {
-	// confirm pin is still in the expected state
-	if (digitalRead(switches[i].pin) == LOW) {
-	  pendingEvent = switches[i].event;
-	}
-	switches[i].triggered = false; // clear flag
+	      // confirm pin is still in the expected state
+	      if (digitalRead(switches[i].pin) == LOW) {
+	        pendingEvent = switches[i].event;
+	      }
+	    switches[i].triggered = false; // clear flag
       }
     }
   }
