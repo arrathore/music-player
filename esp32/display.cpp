@@ -30,6 +30,10 @@ void display_Clear(void) {
   display_SetCursor(0, 0);
 }
 
+void display_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+  tft.fillRect(x, y, w, h, color);
+}
+
 void display_Init(void) {
   tft.initR(INITR_BLACKTAB);
   tft.setRotation(0); // portrait

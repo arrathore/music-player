@@ -1,4 +1,5 @@
 #include "browser.h"
+#include "appManager.h"
 #include "display.h"
 #include "sdCard.h"
 #include "switch.h"
@@ -142,7 +143,7 @@ void BrowserApp::enter(void) {
     buildChildPath(selection.name.c_str(), fullPath, sizeof(fullPath));
     Serial.printf("[browser] now opening %s in player\n", fullPath);
     player_Open(fullPath);
-
+    appManager_SwitchTo(appManager_GetNowPlaying());
 
   } else { // directory
     if (selection.name == "..") {

@@ -5,12 +5,13 @@
 #include "app.h"
 
 #include "browser.h"
+#include "nowPlaying.h"
 
 #include <Arduino.h>
 
 // app instances
 static BrowserApp browserApp;
-
+static NowPlayingApp nowPlayingApp;
 
 // active app pointer
 static App* activeApp = nullptr;
@@ -52,5 +53,9 @@ void appManager_HandleEvent(SwitchEvent e) {
 // instance accessors
 App* appManager_GetBrowser(void) {
   return &browserApp;
+}
+
+App* appManager_GetNowPlaying(void) {
+  return &nowPlayingApp;
 }
 

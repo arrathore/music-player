@@ -37,18 +37,4 @@ class BrowserApp : public App {
   
 };
 
-/*
-// Load directory and draw
-void browser_Init(void);
-
-// Draw a given line in directory listing
-// void browser_DrawLine(int line);
-
-// Draw the entire screen
-void browser_DrawScreen(void);
-
-// Pass switch events into browser
-void browser_HandleEvent(SwitchEvent e);
-*/
-
 #endif

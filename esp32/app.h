@@ -1,4 +1,4 @@
-// Abstract bass class for applications
+// Abstract base class for applications
 #ifndef APP_H
 #define APP_H
 

@@ -7,6 +7,7 @@
 #include "app.h"
 
 class BrowserApp;
+class NowPlayingApp;
 
 // Initialize manager and launch browser
 void appManager_Init(void);
@@ -22,6 +23,7 @@ void appManager_SwitchTo(App* app);
 
 // App instance accessors
 App* appManager_GetBrowser(void);
+App* appManager_GetNowPlaying(void);
 
 #endif
 

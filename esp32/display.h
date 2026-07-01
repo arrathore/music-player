@@ -18,6 +18,9 @@ void display_ClearLine(int16_t y);
 // Clear the display to black and set cursor to 0
 void display_Clear(void);
 
+// Fill a rectangle of color at (x, y) of size w x h
+void display_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+
 // Perform initialization tasks
 void display_Init(void);
 
