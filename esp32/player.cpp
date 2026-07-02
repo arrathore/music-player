@@ -144,6 +144,7 @@ uint32_t player_GetElapsedSec(void) {
   if (state == PLAYER_PAUSED) {
     elapsed -= (millis() - pauseStart);
   }
+  
   return elapsed / 1000;
 }
 

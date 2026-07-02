@@ -55,10 +55,10 @@ void setup() {
 }
 
 void loop() {
-  // handle switches
-  switch_Update();
+  switch_Update(); // get switch input
   player_Update(); // player service
 
   // application manager
   appManager_HandleEvent(switch_GetEvent());
+  appManager_Update();
 }

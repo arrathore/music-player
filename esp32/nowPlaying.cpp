@@ -104,7 +104,7 @@ void NowPlayingApp::drawStatic() {
 void NowPlayingApp::drawDynamic() {
   uint32_t elapsed = player_GetElapsedSec();
   uint32_t duration = player_GetDurationSec();
-
+  
   if (elapsed == lastElapsed && player_GetState() == PLAYER_PLAYING) return;
   lastElapsed = elapsed;
 
@@ -113,7 +113,7 @@ void NowPlayingApp::drawDynamic() {
   formatTime(elapsed, elapsedStr, sizeof(elapsedStr));
   formatTime(duration, durationStr, sizeof(durationStr));
   snprintf(timeBuf, sizeof(timeBuf), "%s / %s", elapsedStr, durationStr);
-
+  
   display_FillRect(0, ROW_TIME, 128, 10, ST77XX_BLACK);
   display_SetCursor(2, ROW_TIME);
   display_Print(String(timeBuf), ST77XX_WHITE);
@@ -150,6 +150,6 @@ void NowPlayingApp::drawProgressBar(uint32_t elapsed, uint32_t duration) {
 void NowPlayingApp::formatTime(uint32_t sec, char* buf, size_t bufSize) {
   uint32_t m = sec / 60;
   uint32_t s = sec % 60;
-  snprintf(buf, bufSize, "%021u:%021u", m, s);
+  snprintf(buf, bufSize, "%02u:%02u", m, s);
 }
 
