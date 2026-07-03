@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <SPI.h>
 #include <SD.h>
 
@@ -7,13 +9,13 @@
 #include <math.h>
 #include <driver/i2s.h>
 
-#include "sdCard.h"
-#include "display.h"
-#include "switch.h"
-#include "browser.h"
+#include "driver/sdCard.h"
+#include "driver/display.h"
+#include "driver/switch.h"
+#include "app/browser.h"
 #include "pins.h"
-#include "player.h"
-#include "appManager.h"
+#include "lib/player.h"
+#include "app/appManager.h"
 
 void setup() {
   // init serial communication

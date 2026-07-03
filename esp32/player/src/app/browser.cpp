@@ -1,9 +1,9 @@
 #include "browser.h"
 #include "appManager.h"
-#include "display.h"
-#include "sdCard.h"
-#include "switch.h"
-#include "player.h"
+#include "../driver/display.h"
+#include "../driver/sdCard.h"
+#include "../driver/switch.h"
+#include "../lib/player.h"
 
 #include <Arduino.h>
 #include <esp_system.h>

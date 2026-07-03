@@ -1,7 +1,7 @@
 #include "appManager.h"
 
-#include "switch.h"
-#include "display.h"
+#include "../driver/switch.h"
+#include "../driver/display.h"
 #include "app.h"
 
 #include "browser.h"

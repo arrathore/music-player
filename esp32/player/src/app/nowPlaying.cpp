@@ -1,7 +1,7 @@
 #include "nowPlaying.h"
 #include "appManager.h"
-#include "display.h"
-#include "player.h"
+#include "../driver/display.h"
+#include "../lib/player.h"
 
 #include <Arduino.h>
 #include <Adafruit_ST7735.h>

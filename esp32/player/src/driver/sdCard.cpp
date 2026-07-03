@@ -1,5 +1,5 @@
 #include "sdCard.h"
-#include "pins.h"
+#include "../pins.h"
 
 #include <Arduino.h>
 #include <esp_system.h>

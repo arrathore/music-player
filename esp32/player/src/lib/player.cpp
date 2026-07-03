@@ -1,5 +1,5 @@
 #include "player.h"
-#include "pins.h"
+#include "../pins.h"
 
 #include <Arduino.h>
 #include <AudioGeneratorWAV.h>

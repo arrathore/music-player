@@ -3,8 +3,8 @@
 #ifndef BROWSER_H
 #define BROWSER_H
 
-#include "switch.h"
-#include "sdCard.h"
+#include "../driver/switch.h"
+#include "../driver/sdCard.h"
 #include "app.h"
 
 #define BROWSER_MAX_ITEMS 14

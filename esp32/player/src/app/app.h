@@ -2,7 +2,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "switch.h"
+#include "../driver/switch.h"
 
 class App {
  public:

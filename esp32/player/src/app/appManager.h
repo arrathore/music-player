@@ -3,7 +3,7 @@
 #ifndef APPMANAGER_H
 #define APPMANAGER_H
 
-#include "switch.h"
+#include "../driver/switch.h"
 #include "app.h"
 
 class BrowserApp;
