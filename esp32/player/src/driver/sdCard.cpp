@@ -17,6 +17,14 @@ int sd_Init(void) {
   return 0;
 }
 
+File sd_OpenFile(const char* path) {
+  return SD.open(path);
+}
+
+void sd_CloseFile(File& f) {
+  if (f) f.close();
+}
+
 int sd_ListDir(const char* path, SDItem* items, int maxItems) {
   int count = 0;
 

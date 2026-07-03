@@ -1,6 +1,8 @@
 #include "player.h"
 #include "../pins.h"
 
+#include "metadata.h"
+
 #include <Arduino.h>
 #include <AudioGeneratorWAV.h>
 #include <AudioFileSourceSD.h>
@@ -18,6 +20,7 @@ static uint32_t startMs = 0; // millis() when playback started
 static uint32_t pausedMs = 0; // accumulated paused time
 static uint32_t pauseStart = 0; // millis() when pause began
 static uint32_t durationSec = 0;
+static TrackMetadata currentMeta;
 
 PlayerResult player_Init(void) {
   out = new AudioOutputI2S();
@@ -71,6 +74,12 @@ PlayerResult player_Open(const char* path) {
     return PLAYER_ERR_FILE;
   }
 
+  // get metadata for new file
+  MetaResult mr = metadata_Read(path, &currentMeta);
+  if (mr != META_OK) {
+    Serial.printf("[player] metadata failed: %s\n", metadata_ErrorStr(mr));
+  }
+  
   // create wav generator
   wav = new AudioGeneratorWAV();
   if (!wav) {
@@ -156,3 +165,7 @@ const char* player_GetFilename(void) {
   return filename;
 }
 
+const TrackMetadata* player_GetMetadata(void) {
+  return &currentMeta;
+}
+  

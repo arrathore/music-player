@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "metadata.h"
 #include <cstdint>
 
 // Playback state
@@ -43,6 +44,9 @@ uint32_t player_GetDurationSec(void);
 
 // Returns filename of current track, empty string if none
 const char* player_GetFilename(void);
+
+// Returns metadata of current track
+const TrackMetadata* player_GetMetadata(void);
 
 #endif
 

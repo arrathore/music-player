@@ -1,7 +1,9 @@
 #include "nowPlaying.h"
+
 #include "appManager.h"
 #include "../driver/display.h"
 #include "../lib/player.h"
+#include "../lib/metadata.h"
 
 #include <Arduino.h>
 #include <Adafruit_ST7735.h>
@@ -24,7 +26,6 @@
 /********************
  * APP INTERFACE
  ********************/
-
 void NowPlayingApp::init() {
   lastUpdateMs = 0;
   lastElapsed = UINT32_MAX; // force draw
@@ -73,37 +74,46 @@ void NowPlayingApp::deinit() {
 /********************
  * DRAWING - Static
  ********************/
-
 void NowPlayingApp::drawStatic() {
+  const TrackMetadata* meta = player_GetMetadata();
+  
   // header bar
   display_FillRect(0, ROW_HEADER, 128, 10, ST77XX_BLUE);
   display_SetCursor(2, ROW_HEADER + 1);
   display_Print("Now Playing", ST77XX_WHITE);
 
-  // get filename from path
-  const char* path = player_GetFilename();
-  const char* name = strrchr(path, '/');
-  name = (name != nullptr) ? name + 1 : path;
-
-  char displayName[64];
-  strncpy(displayName, name, sizeof(displayName) - 1);
-  displayName[sizeof(displayName) - 1] = '\0';
-  char* dot = strrchr(displayName, '.');
-  if (dot != nullptr) *dot = '\0';
-
   // clear filename area and print
   display_FillRect(0, ROW_FILENAME, 128, ROW_TIME - ROW_FILENAME, ST77XX_BLACK);
   display_SetCursor(2, ROW_FILENAME);
-  display_Print(String(displayName), ST77XX_WHITE);
+  if (strlen(meta->title) > 0) {
+    display_Print(String(meta->title), ST77XX_WHITE);
+  } else {
+    // fall back to filename
+    const char* path = player_GetFilename();
+    const char* name = strrchr(path, '/');
+    name = (name != nullptr) ? name + 1 : path;
+
+    char displayName[64];
+    strncpy(displayName, name, sizeof(displayName) - 1);
+    displayName[sizeof(displayName) - 1] = '\0';
+    char* dot = strrchr(displayName, '.');
+    if (dot != nullptr) *dot = '\0';
+    display_Print(String(displayName), ST77XX_WHITE);
+  }
+
+  // draw artist if present
+  display_SetCursor(2, ROW_FILENAME + 20);
+  if (strlen(meta->artist) > 0) {
+    display_Print(String(meta->artist), ST77XX_CYAN);
+  }
 }
 
 /********************
  * DRAWING - Dynamic
  ********************/
-
 void NowPlayingApp::drawDynamic() {
   uint32_t elapsed = player_GetElapsedSec();
-  uint32_t duration = player_GetDurationSec();
+  uint32_t duration = player_GetMetadata()->durationSec;
   
   if (elapsed == lastElapsed && player_GetState() == PLAYER_PLAYING) return;
   lastElapsed = elapsed;
@@ -146,7 +156,6 @@ void NowPlayingApp::drawProgressBar(uint32_t elapsed, uint32_t duration) {
 /********************
  * HELPERS
  ********************/
-
 void NowPlayingApp::formatTime(uint32_t sec, char* buf, size_t bufSize) {
   uint32_t m = sec / 60;
   uint32_t s = sec % 60;
