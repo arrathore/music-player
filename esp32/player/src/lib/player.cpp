@@ -1,17 +1,24 @@
 #include "player.h"
-#include "../pins.h"
 
+#include "../pins.h"
 #include "metadata.h"
+#include "../driver/sdCard.h"
 
 #include <Arduino.h>
-#include <AudioGeneratorWAV.h>
-#include <AudioFileSourceSD.h>
-#include <AudioOutputI2S.h>
 
-// ESP8266Audio objects
-static AudioGeneratorWAV* wav = nullptr;
-static AudioFileSourceSD* source = nullptr;
-static AudioOutputI2S* out = nullptr;
+#include "AudioTools.h"
+#include "AudioLibs/AudioSourceSDFAT.h"
+#include "AudioCodecs/CodecWAV.h"
+
+// AudioTools objects
+static I2SStream i2s;
+static SdSpiConfig sdConfig(PIN_SD_CS, DEDICATED_SPI, SD_SCK_MHZ(4));
+static SdFat32 sd;
+static File file;
+static WAVDecoder decoder;
+static EncodedAudioStream decStream(&i2s, &decoder);
+static StreamCopy copier(decStream, file);
+static bool fileOpen = false;
 
 // internal state
 static PlayerState state = PLAYER_STOPPED;
@@ -23,41 +30,22 @@ static uint32_t durationSec = 0;
 static TrackMetadata currentMeta;
 
 PlayerResult player_Init(void) {
-  out = new AudioOutputI2S();
-  if (!out) return PLAYER_ERR_INIT;
+  // configure I2S output
+  auto cfg = i2s.defaultConfig(TX_MODE);
+  cfg.pin_bck = PIN_I2S_BCLK;
+  cfg.pin_ws = PIN_I2S_LRCLK;
+  cfg.pin_data = PIN_I2S_DATA;
+  cfg.sample_rate = 44100;
+  cfg.channels = 2;
+  cfg.bits_per_sample = 16;
 
-  // set i2s pins
-  out->SetPinout(PIN_I2S_BCLK, PIN_I2S_LRCLK, PIN_I2S_DATA);
-
-  // set output to stereo
-  out->SetChannels(2);
+  if (!i2s.begin(cfg)) {
+    Serial.println("[player] I2S init failed");
+    return PLAYER_ERR_INIT;
+  }
 
   Serial.println("[player] init OK");
   return PLAYER_OK;
-}
-
-void player_Stop(void) {
-  if (wav) {
-    wav->stop();
-    delete wav; wav = nullptr;
-  }
-
-  if (source) {
-    delete source; source = nullptr;
-  }
-
-  if (out) {
-    out->stop();
-  }
-
-  state = PLAYER_STOPPED;
-  filename[0] = '\0';
-  startMs = 0;
-  pausedMs - 0;
-  pauseStart = 0;
-  durationSec = 0;
-
-  Serial.println("[player] stopped");
 }
 
 PlayerResult player_Open(const char* path) {
@@ -66,33 +54,21 @@ PlayerResult player_Open(const char* path) {
   // stop before starting anything
   player_Stop();
 
-  // create new source from SD file
-  source = new AudioFileSourceSD(path);
-  if (!source || !source->isOpen()) {
-    Serial.println("[player] failed to open file!");
-    delete source; source = nullptr;
-    return PLAYER_ERR_FILE;
-  }
-
-  // get metadata for new file
+  // read metadata
   MetaResult mr = metadata_Read(path, &currentMeta);
-  if (mr != META_OK) {
+  if (mr != META_OK)
     Serial.printf("[player] metadata failed: %s\n", metadata_ErrorStr(mr));
-  }
-  
-  // create wav generator
-  wav = new AudioGeneratorWAV();
-  if (!wav) {
-    delete source; source = nullptr;
-    return PLAYER_ERR_INIT;
-  }
 
-  if (!wav->begin(source, out)) {
-    Serial.println("[player] wav->begin failed!");
-    delete wav; wav = nullptr;
-    delete source; source = nullptr;
+  // open file
+  file = sd_OpenFile(path);
+  if (!file) {
+    Serial.printf("[player] failed to open: %s\n", path);
     return PLAYER_ERR_FILE;
   }
+  fileOpen = true;
+
+  // begin decoder and I2S
+  decStream.begin();
 
   // store filename
   strncpy(filename, path, sizeof(filename) - 1);
@@ -109,20 +85,13 @@ PlayerResult player_Open(const char* path) {
   return PLAYER_OK;
 }
 
+// called every loop()
 void player_Update(void) {
   if (state != PLAYER_PLAYING) return;
-  if (!wav || !wav->isRunning()) {
-    // track finished
-    if (state == PLAYER_PLAYING) {
-      Serial.println("[player] EOF - stopping");
-      player_Stop();
-    }
-    return;
-  }
 
-  // feed data from sd to i2s
-  if (!wav->loop()) {
-    Serial.println("[player] wav->loop() returned false - stopping");
+  // feed audio from SD to decoder to I2S
+  if (!copier.copy()) {
+    Serial.println("[player] EOF");
     player_Stop();
   }
 }
@@ -131,16 +100,30 @@ void player_Pause(void) {
   if (state == PLAYER_PLAYING) {
     state = PLAYER_PAUSED;
     pauseStart = millis();
-    // stop feeding loop() and zero output
-    out->stop();
+    i2s.writeSilence(256); // flush with silence to avoid held note
     Serial.println("[player] paused");
 
   } else if (state == PLAYER_PAUSED) {
-    state = PLAYER_PLAYING;
     pausedMs += (millis() - pauseStart);
-    out->begin();
+    state = PLAYER_PLAYING;
     Serial.println("[player] resumed");
   }
+}
+
+void player_Stop(void) {
+  if (fileOpen) {
+    sd_CloseFile(file);
+    fileOpen = false;
+  }
+
+  decStream.end();
+  state = PLAYER_STOPPED;
+  filename[0] = '\0';
+  startMs = 0;
+  pausedMs = 0;
+  pauseStart = 0;
+
+  Serial.println("[player] stopped");
 }
 
 PlayerState player_GetState(void) {
