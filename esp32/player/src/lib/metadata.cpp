@@ -194,6 +194,13 @@ static MetaResult readWavMeta(const char* path, TrackMetadata* meta) {
   return META_OK;
 }
 
+static MetaResult readID3Meta(const char* path, TrackMetadata* meta) {
+  // TODO: implement ID3 parsing
+  // fall back to filename for now
+  titleFromPath(path, meta);
+  return META_OK;
+}
+
 /********************
  * PUBLIC API
  ********************/
@@ -206,6 +213,7 @@ MetaResult metadata_Read(const char* path, TrackMetadata* meta) {
   const char* ext = strrchr(path, '.');
   if (ext == nullptr) return META_ERR_UNKNOWN;
   if (strcasecmp(ext, ".wav") == 0) return readWavMeta(path, meta);
+  if (strcasecmp(ext, ".mp3") == 0) return readID3Meta(path, meta);
   // TODO: add more formats
   else return META_ERR_UNKNOWN;
 }

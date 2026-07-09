@@ -8,15 +8,18 @@
 
 #include "AudioTools.h"
 #include "AudioLibs/AudioSourceSDFAT.h"
+
 #include "AudioCodecs/CodecWAV.h"
+#include "AudioCodecs/CodecMP3Helix.h"
 
 // AudioTools objects
 static I2SStream i2s;
 static SdSpiConfig sdConfig(PIN_SD_CS, DEDICATED_SPI, SD_SCK_MHZ(4));
 static SdFat32 sd;
 static File file;
-static WAVDecoder decoder;
-static EncodedAudioStream decStream(&i2s, &decoder);
+static WAVDecoder wavDecoder;
+static MP3DecoderHelix mp3Decoder;
+static EncodedAudioStream decStream;
 static StreamCopy copier(decStream, file);
 static bool fileOpen = false;
 
@@ -48,6 +51,26 @@ PlayerResult player_Init(void) {
   return PLAYER_OK;
 }
 
+// detect format from extension and select decoder
+static PlayerResult getDecoderForFile(const char* path, AudioDecoder** decoder) {
+  // get extension
+  const char* ext = strrchr(path, '.');
+  if (ext == nullptr) {
+    Serial.println("[player] no file extension");
+    return PLAYER_ERR_FILE;
+  }
+
+  // set decoder
+  if (strcasecmp(ext, ".wav") == 0) *decoder = &wavDecoder;
+  else if (strcasecmp(ext, ".mp3") == 0) *decoder = &mp3Decoder;
+  else {
+    Serial.printf("[player] unsupported format: %s\n", ext);
+    return PLAYER_ERR_FILE;
+  }
+
+  return PLAYER_OK;
+}
+
 PlayerResult player_Open(const char* path) {
   Serial.printf("[player] player_Open called with path %s\n", path);
   
@@ -67,6 +90,19 @@ PlayerResult player_Open(const char* path) {
   }
   fileOpen = true;
 
+  // select decoder
+  AudioDecoder* decoder = nullptr;
+  if (getDecoderForFile(path, &decoder) != PLAYER_OK) {
+    Serial.printf("[player] failed to get decoder");
+    file.close();
+    fileOpen = false;
+    return PLAYER_ERR_FILE;
+  }
+
+  // configure stream with selected decoder
+  decStream.setStream(&i2s);
+  decStream.setDecoder(decoder);
+  
   // begin decoder and I2S
   decStream.begin();
 
