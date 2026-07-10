@@ -1,7 +1,11 @@
 #include "metadata.h"
 
-#include <Arduino.h>
 #include "../driver/sdCard.h"
+
+#include <Arduino.h>
+
+#include "AudioTools.h"
+#include "AudioMetaData/MetaDataID3.h"
 
 /********************
  * HELPERS - little endian reads
@@ -194,10 +198,175 @@ static MetaResult readWavMeta(const char* path, TrackMetadata* meta) {
   return META_OK;
 }
 
+/********************
+ * ID3 metadata parser
+ ********************/
+
+// temp struct for callback to populate
+static TrackMetadata* id3Target = nullptr;
+
+static void id3Callback(MetaDataType type, const char* str, int len) {
+  if (id3Target == nullptr) return;
+
+  // copy into the right field, clamping to buffer size
+  switch (type) {
+    case Title:
+      strncpy(id3Target->title, str, sizeof(id3Target->title) - 1);
+      break;
+    case Artist:
+      strncpy(id3Target->artist, str, sizeof(id3Target->artist) - 1);
+      break;
+    case Album:
+      strncpy(id3Target->album, str, sizeof(id3Target->album) - 1);
+      break;
+    default:
+      break;
+  }
+}
+
+// get duration from Xing/Info header
+static uint32_t readXingDuration(File& f, uint32_t id3Size) {
+  f.seek(id3Size);
+
+  uint8_t buf[256];
+  int bytesRead = f.read(buf, sizeof(buf));
+  if (bytesRead < 40) return 0;
+
+  // find MP3 sync word
+  int syncPos = -1;
+  for (int i = 0; i < bytesRead - 1; i++) {
+    if (buf[i] == 0xFF && (buf[i + 1] & 0xE0) == 0xE0) {
+      syncPos = i;
+      break;
+    }
+  }
+  if (syncPos < 0) return 0;
+
+  // parse MP3 frame header to get sample rate and layer
+  uint8_t* h = &buf[syncPos];
+  uint8_t bitrateIdx = (h[2] >> 4) & 0x0F;
+  uint8_t sampleIdx = (h[2] >> 2) & 0x03;
+  uint8_t channelMode = (h[3] >> 6) & 0x03;
+
+  const uint32_t sampleRates[] = {44100, 48000, 32000, 0};
+  const uint32_t sampleRate = sampleRates[sampleIdx];
+  if (sampleRate == 0) return 0;
+
+  // Xing/Info header starts 32 bytes into frame for stereo
+  // 17 bytes for mono
+  int xingOffset = syncPos + 4 + (channelMode == 3 ? 17: 32);
+  if (xingOffset + 12 > bytesRead) return 0;
+
+  uint8_t* xing = &buf[xingOffset];
+
+  // check for "Xing" or "Info" marker
+  if (memcmp(xing, "Xing", 4) != 0 && memcmp(xing, "Info", 4) != 0)
+    return 0;
+
+  // Xing flags field tells us which optional fields are present
+  uint32_t flags = ((uint32_t)xing[4] << 24) | ((uint32_t)xing[5] << 16) |
+    ((uint32_t)xing[6] << 8) | xing[7];
+
+  if (!(flags & 0x01)) return 0; // frame count field not present
+
+  uint32_t frameCount = ((uint32_t)xing[8] << 24) | ((uint32_t)xing[9] << 16) |
+    ((uint32_t)xing[10] << 8) | xing[11];
+
+  // each MPEG1 Layer3 frame contains 1152 samples
+  return (frameCount * 1152) / sampleRate;
+}
+
+// get rough duration estimate from the file size
+// fallback if both other methods fail
+static uint32_t estimateDurationFromFileSize(File& f, uint32_t id3Size) {
+  uint32_t audioBytes = f.size() - id3Size;
+  const uint32_t ASSUMED_BITRATE_BPS = 128000; // assume 128kpbs
+  return (audioBytes * 8) / ASSUMED_BITRATE_BPS;
+}
+
+// read size from ID3v2 header
+static uint32_t readID3v2Size(File& f) {
+  /*
+    bytes 0-2: "ID3"
+    bytes 3-4: version
+    byte 5: flags
+    bytes 6-9: size
+  */
+  uint8_t header[10];
+  f.seek(0);
+  if (f.read(header, 10) < 10) return 0;
+
+  // check ID3 marker
+  if (header[0] != 'I' || header[1] != 'D' || header[2] != '3') return 0;
+
+  // synchsafe integer
+  uint32_t size = ((uint32_t)(header[6] & 0x7F) << 21) |
+    ((uint32_t)(header[7] & 0x7F) << 14) |
+    ((uint32_t)(header[8] & 0x7F) <<  7) |
+    (uint32_t)(header[9] & 0x7F);
+
+  return size + 10;  // +10 for the header itself  
+
+}
+
 static MetaResult readID3Meta(const char* path, TrackMetadata* meta) {
-  // TODO: implement ID3 parsing
-  // fall back to filename for now
-  titleFromPath(path, meta);
+  File f = sd_OpenFile(path);
+  if (!f) return META_ERR_OPEN;
+
+  // get ID3 block size
+  uint32_t id3Size = readID3v2Size(f);
+  Serial.printf("[metadata] ID3v2 block size: %lu\n", id3Size);
+
+  // point the static target at meta struct for callback
+  f.seek(0);
+  id3Target = meta;
+
+  MetaDataID3 id3;
+  id3.setCallback(id3Callback);
+  id3.begin();
+
+  // buffer for data
+  const int CHUNK = 256;
+  uint8_t buf[CHUNK];
+  int totalRead = 0;
+  const int MAX_READ = 16384; // 16kb
+
+  while (f.available() && totalRead < MAX_READ) {
+    int bytesRead = f.read(buf, CHUNK);
+    if (bytesRead <= 0) break;
+    id3.write(buf, bytesRead);
+    totalRead += bytesRead;
+
+    // stop when we get all fields
+    if (strlen(meta->title) > 0 &&
+	strlen(meta->artist) > 0 &&
+	strlen(meta->album) > 0) break;
+  }
+
+  //  uint32_t id3Size = totalRead;
+  id3.end();
+
+  // duration fallback chain
+  if (meta->durationSec == 0) {
+    // try Xing/Info header
+    meta->durationSec = readXingDuration(f, id3Size);
+    Serial.printf("[metadata] Xing duration: %lus\n", meta->durationSec);
+  }
+  if (meta->durationSec == 0) {
+    // file size estimate
+    meta->durationSec = estimateDurationFromFileSize(f, id3Size);
+    Serial.printf("[metadata] estimated duration: %lus\n", meta->durationSec);
+  }
+  
+  sd_CloseFile(f);
+  id3Target = nullptr;
+
+  // fall back to filename if not title found
+  if (strlen(meta->title) == 0) titleFromPath(path, meta);
+
+  Serial.printf("[metadata] %s | title: %s | artist: %s | album: %s | duration: %lus\n",
+		path, meta->title, meta->artist, meta->album, meta->durationSec);
+  
   return META_OK;
 }
 
