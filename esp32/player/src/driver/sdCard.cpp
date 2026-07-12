@@ -42,9 +42,15 @@ int sd_ListDir(const char* path, SDItem* items, int maxItems) {
 
   File entry = root.openNextFile();
   while (entry && count < maxItems) {
-    items[count].name = String(entry.name());
-    items[count].type = entry.isDirectory() ? ITEM_DIR : ITEM_FILE;
-    count++;
+    const char* name = entry.name();
+
+    // skip hidden files starting with .
+    if (name[0] != '.') {
+      items[count].name = String(entry.name());
+      items[count].type = entry.isDirectory() ? ITEM_DIR : ITEM_FILE;
+      count++;
+    }
+    
     entry.close();
     entry = root.openNextFile();
   }
