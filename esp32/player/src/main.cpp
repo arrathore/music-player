@@ -30,9 +30,9 @@ void setup() {
 
   // initialize sd card reader 
   display_Print("Init SD card... ");
-  if (sd_Init() != 0) {
+  while (sd_Init() != 0) {
     display_Print("fail!\n");
-    while (1);
+    display_Print("retrying...\n");
   }
   display_Print("done.\n");
 
