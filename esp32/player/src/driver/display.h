@@ -21,6 +21,9 @@ void display_Clear(void);
 // Fill a rectangle of color at (x, y) of size w x h
 void display_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 
+// Draw the bitmap in path at (x, y)
+void display_DrawBMP(const char* path, int16_t x, int16_t y);
+
 // Perform initialization tasks
 void display_Init(void);
 
