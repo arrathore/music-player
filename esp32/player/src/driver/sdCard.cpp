@@ -59,3 +59,7 @@ int sd_ListDir(const char* path, SDItem* items, int maxItems) {
   return count;
 }
 
+bool sd_FileExists(const char* path) {
+  return SD.exists(path);
+}
+

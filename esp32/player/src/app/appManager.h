@@ -4,10 +4,12 @@
 #define APPMANAGER_H
 
 #include "../driver/switch.h"
+#include "albumView.h"
 #include "app.h"
 
 class BrowserApp;
 class NowPlayingApp;
+class AlbumViewApp;
 
 // Initialize manager and launch browser
 void appManager_Init(void);
@@ -24,6 +26,7 @@ void appManager_SwitchTo(App* app);
 // App instance accessors
 App* appManager_GetBrowser(void);
 App* appManager_GetNowPlaying(void);
+App* appManager_GetAlbumView(void);
 
 #endif
 

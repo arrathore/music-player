@@ -23,7 +23,7 @@ void display_SetCursor(int16_t x, int16_t y) {
 }
 
 void display_ClearLine(int16_t y) {
-  tft.fillRect(0, y, 128, 12, ST7735_BLACK);
+  tft.fillRect(0, y, LINE_WIDTH, 12, ST7735_BLACK);
 }
 
 void display_Clear(void) {
@@ -111,7 +111,8 @@ void display_DrawBMP(const char* path, int16_t x, int16_t y) {
 
 void display_Init(void) {
   tft.initR(INITR_BLACKTAB);
-  tft.setRotation(0); // portrait
+  // tft.setRotation(0); // portrait
+  tft.setRotation(3); // landscape
   tft.fillScreen(ST77XX_BLACK);
   tft.setTextWrap(true);
   tft.setTextSize(1);

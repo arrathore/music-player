@@ -6,12 +6,14 @@
 
 #include "browser.h"
 #include "nowPlaying.h"
+#include "albumView.h"
 
 #include <Arduino.h>
 
 // app instances
 static BrowserApp browserApp;
 static NowPlayingApp nowPlayingApp;
+static AlbumViewApp albumViewApp;
 
 // active app pointer
 static App* activeApp = nullptr;
@@ -57,5 +59,9 @@ App* appManager_GetBrowser(void) {
 
 App* appManager_GetNowPlaying(void) {
   return &nowPlayingApp;
+}
+
+App* appManager_GetAlbumView(void) {
+  return &albumViewApp;
 }
 

@@ -31,12 +31,13 @@ File sd_OpenFile(const char* path);
 // Close a file opened with sd_OpenFile()
 void sd_CloseFile(File& f);
   
-
 /*
   Puts a list of items at this path in items
   returns item count
 */
 int sd_ListDir(const char* path, SDItem* items, int maxItems);
+
+bool sd_FileExists(const char* path);
 
 #endif
 

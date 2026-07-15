@@ -1,9 +1,12 @@
 #include "browser.h"
-#include "appManager.h"
+
 #include "../driver/display.h"
 #include "../driver/sdCard.h"
 #include "../driver/switch.h"
 #include "../lib/player.h"
+
+#include "appManager.h"
+#include "albumView.h"
 
 #include <Arduino.h>
 #include <esp_system.h>
@@ -152,9 +155,18 @@ void BrowserApp::enter(void) {
       buildChildPath(selection.name.c_str()); // cd selection
     }
 
-    loadDirectory(currentPath);
-    selectedIdx = 1;
-    drawScreen();
+    // check for meta.txt in the new directory
+    char metaPath[270];
+    snprintf(metaPath, sizeof(metaPath), "%s/meta.txt", currentPath);
+    if (sd_FileExists(metaPath)) {
+      // launch albumView
+      static_cast<AlbumViewApp*>(appManager_GetAlbumView())->setPath(currentPath);
+      appManager_SwitchTo(appManager_GetAlbumView());
+    } else { // standard behavior
+      loadDirectory(currentPath);
+      selectedIdx = 1;
+      drawScreen();
+    }
   }
 }
 
