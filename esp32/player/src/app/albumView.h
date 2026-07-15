@@ -19,6 +19,7 @@
 #define AV_DIVIDER_Y     66  // horizontal line between header and tracklist
 #define AV_TRACK_START_Y 70  // y of first track row
 #define AV_TRACK_H       15  // px per track row
+#define AV_SCROLLBAR_X   157
 
 class AlbumViewApp : public App {
  public:
@@ -51,6 +52,7 @@ class AlbumViewApp : public App {
   // Drawing
   void drawHeader(void);
   void drawCover(void);
+  void drawScrollbar(void);
   void drawTrackList(void);
   void drawTrack(int trackIdx, int screenRow);
   void drawDivider(void);

@@ -211,7 +211,20 @@ void AlbumViewApp::drawHeader() {
 void AlbumViewApp::drawDivider() {
   display_FillRect(0, AV_DIVIDER_Y, 160, 1, ST77XX_WHITE);
 }
- 
+
+void AlbumViewApp::drawScrollbar() {
+  if (trackCount <= ALBUM_VISIBLE_TRACKS) return; // no scrollbar required
+
+  int barAreaH = ALBUM_VISIBLE_TRACKS * AV_TRACK_H;
+  int barH = max(4, barAreaH * ALBUM_VISIBLE_TRACKS / trackCount);
+  int barY = AV_TRACK_START_Y + barAreaH * scrollOffset / trackCount;
+
+  // background
+  display_FillRect(AV_SCROLLBAR_X, AV_TRACK_START_Y, 3, barAreaH, ST77XX_YELLOW);
+  // filled portion
+  display_FillRect(AV_SCROLLBAR_X, barY, 3, barH, ST77XX_WHITE);
+}
+
 void AlbumViewApp::drawTrack(int trackIdx, int screenRow) {
   int y = AV_TRACK_START_Y + screenRow * AV_TRACK_H;
   display_ClearLine(y);
@@ -239,6 +252,8 @@ void AlbumViewApp::drawTrack(int trackIdx, int screenRow) {
  
   uint16_t color = (trackIdx == selectedIdx) ? ST77XX_WHITE : LIGHTGREY;
   display_Print(nameStr, color);
+
+  drawScrollbar();
 }
  
 void AlbumViewApp::drawTrackList() {
@@ -248,13 +263,7 @@ void AlbumViewApp::drawTrackList() {
   }
  
   // scrollbar if content overflows
-  if (trackCount > ALBUM_VISIBLE_TRACKS) {
-    int barAreaH = ALBUM_VISIBLE_TRACKS * AV_TRACK_H;
-    int barH = max(4, barAreaH * ALBUM_VISIBLE_TRACKS / trackCount);
-    int barY = AV_TRACK_START_Y + barAreaH * scrollOffset / trackCount;
-    display_FillRect(157, AV_TRACK_START_Y, 3, barAreaH, ST77XX_YELLOW);
-    display_FillRect(157, barY, 3, barH, ST77XX_WHITE);
-  }
+  drawScrollbar();
 }
 
 /********************
