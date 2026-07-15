@@ -59,11 +59,15 @@ void BrowserApp::drawLine(int line) {
   // print cursor if needed
   if (line == selectedIdx) display_Print("*", ST77XX_MAGENTA);
 
+  // truncate name if needed
+  String name = String(items[line - 1].name);
+  if (name.length() > BROWSER_ITEM_MAX_LENGTH) name = name.substring(0, BROWSER_ITEM_MAX_LENGTH - 2) + "-";
+  
   // print name
   if (items[line - 1].type == ITEM_DIR)
-    display_Print(items[line - 1].name, ST77XX_GREEN);
+    display_Print(name, ST77XX_GREEN);
   else
-    display_Print(items[line - 1].name);
+    display_Print(name);
   
   display_Print("\n");
 }

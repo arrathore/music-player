@@ -7,10 +7,11 @@
 #include "../driver/sdCard.h"
 #include "app.h"
 
-#define BROWSER_MAX_ITEMS 14
-#define BROWSER_VISIBLE 14 // lines visible at once
+#define BROWSER_MAX_ITEMS 10
+#define BROWSER_VISIBLE 10 // lines visible at once
 #define BROWSER_HEADER_Y 0 // y position of header bar
 #define BROWSER_LIST_Y 12 // y position where list items start
+#define BROWSER_ITEM_MAX_LENGTH 26 // chars that can fit on one line
 
 class BrowserApp : public App {
  public:
