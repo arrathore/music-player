@@ -8,21 +8,6 @@
 #include <Arduino.h>
 #include <Adafruit_ST7735.h>
 
-#define UPDATE_INTERVAL_MS 1000
-
-// Layout constants
-#define ROW_HEADER 0
-#define ROW_FILENAME 20
-#define ROW_TIME 80
-#define ROW_BAR 95
-#define ROW_STATE 115
-
-#define BAR_X 2
-#define BAR_Y ROW_BAR
-#define BAR_W 124
-#define BAR_H 8
-
-
 /********************
  * APP INTERFACE
  ********************/
@@ -78,12 +63,12 @@ void NowPlayingApp::drawStatic() {
   const TrackMetadata* meta = player_GetMetadata();
   
   // header bar
-  display_FillRect(0, ROW_HEADER, 128, 10, ST77XX_BLUE);
+  display_FillRect(0, ROW_HEADER, DISPLAY_LINE_WIDTH, 10, ST77XX_BLUE);
   display_SetCursor(2, ROW_HEADER + 1);
   display_Print("Now Playing", ST77XX_WHITE);
 
   // clear filename area and print
-  display_FillRect(0, ROW_FILENAME, 128, ROW_TIME - ROW_FILENAME, ST77XX_BLACK);
+  display_FillRect(0, ROW_FILENAME, DISPLAY_LINE_WIDTH, ROW_TIME - ROW_FILENAME, ST77XX_BLACK);
   display_SetCursor(2, ROW_FILENAME);
   if (strlen(meta->title) > 0) {
     display_Print(String(meta->title), ST77XX_WHITE);
@@ -124,7 +109,7 @@ void NowPlayingApp::drawDynamic() {
   formatTime(duration, durationStr, sizeof(durationStr));
   snprintf(timeBuf, sizeof(timeBuf), "%s / %s", elapsedStr, durationStr);
   
-  display_FillRect(0, ROW_TIME, 128, 10, ST77XX_BLACK);
+  display_FillRect(0, ROW_TIME, DISPLAY_LINE_WIDTH, 10, ST77XX_BLACK);
   display_SetCursor(2, ROW_TIME);
   display_Print(String(timeBuf), ST77XX_WHITE);
 
@@ -132,7 +117,7 @@ void NowPlayingApp::drawDynamic() {
   drawProgressBar(elapsed, duration);
 
   // state indicator
-  display_FillRect(0, ROW_STATE, 128, 10, ST77XX_BLACK);
+  display_FillRect(0, ROW_STATE, DISPLAY_LINE_WIDTH, 10, ST77XX_BLACK);
   display_SetCursor(2, ROW_STATE);
   if (player_GetState() == PLAYER_PLAYING) {
     display_Print("> Playing", ST77XX_GREEN);

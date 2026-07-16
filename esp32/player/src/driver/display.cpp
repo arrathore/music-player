@@ -23,7 +23,7 @@ void display_SetCursor(int16_t x, int16_t y) {
 }
 
 void display_ClearLine(int16_t y) {
-  tft.fillRect(0, y, LINE_WIDTH, 12, ST7735_BLACK);
+  tft.fillRect(0, y, DISPLAY_LINE_WIDTH, 12, ST7735_BLACK);
 }
 
 void display_Clear(void) {

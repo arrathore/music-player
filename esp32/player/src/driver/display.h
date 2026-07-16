@@ -3,7 +3,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#define LINE_WIDTH 160
+#define DISPLAY_LINE_WIDTH 160
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
