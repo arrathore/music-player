@@ -30,11 +30,15 @@ class BrowserApp : public App {
   void drawHeader(void);
   void drawLine(int line);
   void drawScreen(void);
-  void enter(void);
-  void cursorDown(void);
   void buildChildPath(const char* name);
   void buildChildPath(const char* name, char* out, size_t outSize);
   void buildParentPath(void);
+
+  void enter(void);
+  void cursorDown(void);
+  void cursorUp(void);
+  void backout(void);
+
   
 };
 

@@ -38,6 +38,20 @@ void IRAM_ATTR downISR(void) {
   }
 }
 
+void IRAM_ATTR upISR(void) {
+  if (!switches[2].triggered) { // debounce
+    switches[2].triggered = true;
+    switches[2].triggerTime = millis();
+  }
+}
+
+void IRAM_ATTR backISR(void) {
+  if (!switches[3].triggered) { // debounce
+    switches[3].triggered = true;
+    switches[3].triggerTime = millis();
+  }
+}
+
 void switch_Update(void) {
   for (int i = 0; i < NUM_SWITCHES; i++) {
     if (switches[i].triggered) {
@@ -62,7 +76,15 @@ SwitchEvent switch_GetEvent(void) {
 void switch_Init(void) {
   pinMode(PIN_BTN_ENTER, INPUT_PULLDOWN);
   attachInterrupt(PIN_BTN_ENTER, enterISR, FALLING);
+  
   pinMode(PIN_BTN_DOWN, INPUT_PULLDOWN);
   attachInterrupt(PIN_BTN_DOWN, downISR, FALLING);
+
+  pinMode(PIN_BTN_UP, INPUT_PULLDOWN);
+  attachInterrupt(PIN_BTN_UP, upISR, FALLING);
+  
+  pinMode(PIN_BTN_BACK, INPUT_PULLDOWN);
+  attachInterrupt(PIN_BTN_BACK, backISR, FALLING);  
+  
 }
 

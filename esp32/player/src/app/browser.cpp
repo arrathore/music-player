@@ -32,8 +32,10 @@ void BrowserApp::deinit() {
 
 void BrowserApp::handleEvent(SwitchEvent e) {
   switch (e) {
-    case SWITCH_DOWN: cursorDown(); break;
     case SWITCH_ENTER: enter(); break;
+    case SWITCH_DOWN: cursorDown(); break;
+    case SWITCH_UP: cursorUp(); break;
+    case SWITCH_BACK: backout(); break;
     default: break;
   }
 }
@@ -140,6 +142,30 @@ void BrowserApp::cursorDown(void) {
   Serial.print("/");
   Serial.println(itemCount);
   */
+}
+
+void BrowserApp::cursorUp(void) {
+  Serial.println("[browser] got up");
+  if (selectedIdx <= 1) {
+    selectedIdx = itemCount;
+    // redraw old line
+    drawLine(1);
+  } else {
+    selectedIdx--;
+    // redraw old line
+    drawLine(selectedIdx + 1);
+  }
+
+  // redraw new line
+  drawLine(selectedIdx);
+}
+
+void BrowserApp::backout(void) {
+  Serial.println("[browser] got back");
+  buildParentPath();
+  loadDirectory(currentPath);
+  selectedIdx = 1;
+  drawScreen();
 }
 
 void BrowserApp::enter(void) {
