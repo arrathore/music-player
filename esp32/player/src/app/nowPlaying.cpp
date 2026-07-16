@@ -41,11 +41,16 @@ void NowPlayingApp::handleEvent(SwitchEvent e) {
       drawDynamic();
       break;
 
-    case SWITCH_DOWN: // stop on down
+      /*
+    case SWITCH_DOWN: // skip on down TODO
+
+      */
+
+    case SWITCH_BACK: // stop on back
       player_Stop();
       appManager_SwitchTo(appManager_GetBrowser());
       break;
-
+      
     default:
       break;
   }
