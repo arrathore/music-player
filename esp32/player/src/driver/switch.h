@@ -14,6 +14,8 @@ typedef enum {
   SWITCH_NONE = 0,
   SWITCH_ENTER = 1,
   SWITCH_DOWN = 2,
+  SWITCH_UP = 3,
+  SWITCH_BACK = 4,
 } SwitchEvent;
 
 // Returns the latest event and clears

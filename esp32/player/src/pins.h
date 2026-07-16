@@ -37,6 +37,8 @@
   // buttons
   #define PIN_BTN_ENTER 32
   #define PIN_BTN_DOWN  33
+  #define PIN_BTN_UP    34
+  #define PIN_BTN_BACK  35
 
   // I2S
   #define PIN_I2S_BCLK  26
