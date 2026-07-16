@@ -58,10 +58,12 @@ class AlbumViewApp : public App {
   void drawDivider(void);
 
   // Navigation
+  void clampScroll(void);
+
   void cursorDown(void);
   void cursorUp(void);
   void enter(void);
-  void clampScroll(void);
+  void exit(void);
 };
 
 #endif

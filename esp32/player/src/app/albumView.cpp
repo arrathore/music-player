@@ -1,4 +1,4 @@
-#include "AlbumView.h"
+#include "albumView.h"
 #include "appManager.h"
 #include "../driver/display.h"
 #include "../driver/sdCard.h"
@@ -56,8 +56,10 @@ void AlbumViewApp::deinit() {
 
 void AlbumViewApp::handleEvent(SwitchEvent e) {
   switch (e) {
-    case SWITCH_DOWN: cursorDown(); break;
     case SWITCH_ENTER: enter(); break;
+    case SWITCH_DOWN: cursorDown(); break;
+    case SWITCH_UP: cursorUp(); break;
+    case SWITCH_BACK: exit(); break;
     default: break;
   }
 }
@@ -295,21 +297,21 @@ void AlbumViewApp::cursorDown() {
   }
 }
 
-/* UNUSED
 void AlbumViewApp::cursorUp() {
   if (trackCount == 0) return;
   int prev = selectedIdx;
+  int prevScroll = scrollOffset;
+  
   selectedIdx = (selectedIdx - 1 + trackCount) % trackCount; // wrap around
   clampScroll();
 
-  if (scrollOffset != (selectedIdx < ALBUM_VISIBLE_TRACKS ? 0 : selectedIdx - ALBUM_VISIBLE_TRACKS + 1)) {
+  if (scrollOffset != prevScroll) {
     drawTrackList();
   } else {
     drawTrack(prev, prev - scrollOffset);
     drawTrack(selectedIdx, selectedIdx - scrollOffset);
   }
 }
-*/
 
 void AlbumViewApp::enter() {
   if (trackCount == 0) return;
@@ -320,5 +322,10 @@ void AlbumViewApp::enter() {
   // appManager_SwitchTo(appManager_GetNowPlaying());
   Serial.printf("[albumView] selected track: %s/%s\n", albumPath, tracks[selectedIdx]);
 
+}
+
+void AlbumViewApp::exit() {
+  Serial.println("[albumView] exiting");
+  appManager_SwitchTo(appManager_GetBrowser());
 }
 
