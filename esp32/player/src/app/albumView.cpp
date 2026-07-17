@@ -11,9 +11,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
-#define LIGHTGREY 0xC618
-#define DARKGREY  0x7BEF
-
 void AlbumViewApp::setPath(const char* path) {
   strncpy(albumPath, path, sizeof(albumPath) - 1);
   albumPath[sizeof(albumPath) - 1] = '\0';
@@ -166,7 +163,7 @@ void AlbumViewApp::drawCover() {
 
   // placeholder if cover is missing
   if (!sd_FileExists(coverPath)) {
-    display_FillRect(AV_COVER_X, AV_COVER_Y, AV_COVER_W, AV_COVER_H, DARKGREY);
+    display_FillRect(AV_COVER_X, AV_COVER_Y, AV_COVER_W, AV_COVER_H, DARKGRAY);
     display_SetCursor(AV_COVER_X + 20, AV_COVER_Y + 28);
     display_Print("?", ST77XX_WHITE);
   }
@@ -254,7 +251,7 @@ void AlbumViewApp::drawTrack(int trackIdx, int screenRow) {
   String nameStr = String(displayName);
   if (nameStr.length() > maxChars) nameStr = nameStr.substring(0, maxChars - 1) + "-";
  
-  uint16_t color = (trackIdx == selectedIdx) ? ST77XX_WHITE : LIGHTGREY;
+  uint16_t color = (trackIdx == selectedIdx) ? ST77XX_WHITE : LIGHTGRAY;
   display_Print(nameStr, color);
 
   drawScrollbar();

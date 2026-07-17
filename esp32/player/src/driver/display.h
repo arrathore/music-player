@@ -8,6 +8,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
+// Custom colors
+#define LIGHTGRAY 0xC618
+#define DARKGRAY  0x7BEF
+
 // Print text to the display
 void display_Print(const String &msg, uint16_t color = ST77XX_WHITE);
 

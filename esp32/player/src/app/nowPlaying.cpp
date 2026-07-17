@@ -105,6 +105,12 @@ void NowPlayingApp::drawStatic() {
   if (strlen(meta->artist) > 0) {
     display_Print(String(meta->artist), ST77XX_CYAN);
   }
+
+  // draw album if present
+  display_SetCursor(2, ROW_FILENAME + 30);
+  if (strlen(meta->album) > 0) {
+    display_Print(String(meta->album), LIGHTGRAY);
+  }
 }
 
 /********************
