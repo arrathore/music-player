@@ -56,7 +56,7 @@ void NowPlayingApp::handleEvent(SwitchEvent e) {
       break;
 
     case SWITCH_BACK: // stop on back
-      player_Stop();
+      player_StopAndEnd();
       appManager_SwitchTo(appManager_GetBrowser());
       break;
       
@@ -67,7 +67,7 @@ void NowPlayingApp::handleEvent(SwitchEvent e) {
 
 void NowPlayingApp::deinit() {
   if (player_GetState() != PLAYER_STOPPED)
-    player_Stop();
+    player_StopAndEnd();
 }
 
 /********************

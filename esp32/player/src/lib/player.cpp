@@ -137,7 +137,7 @@ void player_Update(void) {
     Serial.println("[player] EOF");
 
     if (queueIdx >= queueCount)
-      player_Stop();
+      player_StopAndEnd();
     else
       player_Open(queue[++queueIdx]);
   }
@@ -158,10 +158,12 @@ void player_Pause(void) {
 }
 
 void player_Skip(void) {
-  player_Stop();
-  if (queueIdx < queueCount)
+  if (queueIdx < queueCount) {
+    player_Stop();
     player_Open(queue[++queueIdx]);
-  // else, reached end of queue, just stop
+    
+  } else // else, reached end of queue, stop and end
+    player_StopAndEnd();
 }
 
 void player_Prev(void) {
@@ -186,6 +188,12 @@ void player_Stop(void) {
   pauseStart = 0;
 
   Serial.println("[player] stopped");
+}
+
+void player_StopAndEnd(void) {
+  player_Stop();
+  queueCount = 0;
+  queueIdx = 0;
 }
 
 PlayerResult player_SetQueue(const char* albumPath, char tracks[][128], int trackCount, int startIdx) {

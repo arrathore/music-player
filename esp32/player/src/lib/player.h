@@ -37,6 +37,9 @@ void player_Prev(void);
 // Stop playback and release resources
 void player_Stop(void);
 
+// Stop playback and clear queue
+void player_StopAndEnd(void);
+
 // Drive audio pipeline, called every loop()
 void player_Update(void);
 
