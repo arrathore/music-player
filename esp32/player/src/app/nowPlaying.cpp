@@ -47,10 +47,13 @@ void NowPlayingApp::handleEvent(SwitchEvent e) {
       drawDynamic();
       break;
 
-      /*
-    case SWITCH_DOWN: // skip on down TODO
+    case SWITCH_DOWN: // skip on down
+      player_Skip();
+      break;
 
-      */
+    case SWITCH_UP: // prev on up
+      player_Prev();
+      break;
 
     case SWITCH_BACK: // stop on back
       player_Stop();

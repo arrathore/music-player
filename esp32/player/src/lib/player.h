@@ -16,6 +16,7 @@ typedef enum {
   PLAYER_OK = 0,
   PLAYER_ERR_INIT = 1, // I2S init failed
   PLAYER_ERR_FILE = 2, // problem with file
+  PLAYER_ERR = 3       // other
 } PlayerResult;
 
 // Initialize I2S
@@ -26,6 +27,12 @@ PlayerResult player_Open(const char* path);
 
 // Pause / resume toggle
 void player_Pause(void);
+
+// Skip current track
+void player_Skip(void);
+
+// Return to previous track
+void player_Prev(void);
 
 // Stop playback and release resources
 void player_Stop(void);

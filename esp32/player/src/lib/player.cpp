@@ -157,6 +157,21 @@ void player_Pause(void) {
   }
 }
 
+void player_Skip(void) {
+  player_Stop();
+  if (queueIdx < queueCount)
+    player_Open(queue[++queueIdx]);
+  // else, reached end of queue, just stop
+}
+
+void player_Prev(void) {
+  player_Stop();
+  if (queueIdx != 0)
+    player_Open(queue[--queueIdx]);
+  else
+    player_Open(queue[queueIdx]); // restart this track
+}
+
 void player_Stop(void) {
   if (fileOpen) {
     sd_CloseFile(file);
