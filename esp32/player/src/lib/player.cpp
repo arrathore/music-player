@@ -3,6 +3,7 @@
 #include "../pins.h"
 #include "metadata.h"
 #include "../driver/sdCard.h"
+#include "../app/albumView.h"
 
 #include <Arduino.h>
 
@@ -26,11 +27,17 @@ static bool fileOpen = false;
 // internal state
 static PlayerState state = PLAYER_STOPPED;
 static char filename[256] = "";
+static TrackMetadata currentMeta;
+
+static char queue[ALBUM_MAX_TRACKS][128];
+static int queueCount = 0;
+static int queueIdx = 0;
+
 static uint32_t startMs = 0; // millis() when playback started
 static uint32_t pausedMs = 0; // accumulated paused time
 static uint32_t pauseStart = 0; // millis() when pause began
 static uint32_t durationSec = 0;
-static TrackMetadata currentMeta;
+
 
 PlayerResult player_Init(void) {
   // configure I2S output
@@ -128,7 +135,11 @@ void player_Update(void) {
   // feed audio from SD to decoder to I2S
   if (!copier.copy()) {
     Serial.println("[player] EOF");
-    player_Stop();
+
+    if (queueIdx >= queueCount)
+      player_Stop();
+    else
+      player_Open(queue[++queueIdx]);
   }
 }
 
@@ -160,6 +171,21 @@ void player_Stop(void) {
   pauseStart = 0;
 
   Serial.println("[player] stopped");
+}
+
+PlayerResult player_SetQueue(const char* albumPath, char tracks[][128], int trackCount, int startIdx) {
+  // reset queue
+  queueCount = 0;
+  queueIdx = 0;
+
+  // build queue
+  for (int i = startIdx, j = 0; i < trackCount; i++, j++) {
+    snprintf(queue[j], 128, "%s/%s", albumPath, tracks[i]);
+    queueCount++;
+  }
+
+  player_Open(queue[queueIdx]);
+  return PLAYER_OK;
 }
 
 PlayerState player_GetState(void) {

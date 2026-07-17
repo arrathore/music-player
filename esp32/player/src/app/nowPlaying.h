@@ -6,7 +6,6 @@
 
 #include <Arduino.h>
 
-
 #define UPDATE_INTERVAL_MS 1000
 
 // Layout constants

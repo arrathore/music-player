@@ -39,7 +39,7 @@ class AlbumViewApp : public App {
   char artist[64];
   char genre[32];
   char year[8];
-  char tracks[ALBUM_MAX_TRACKS][64];
+  char tracks[ALBUM_MAX_TRACKS][128];
   int trackCount = 0;
 
   // UI state

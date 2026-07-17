@@ -26,6 +26,12 @@ void NowPlayingApp::update() {
     return;
   }
 
+  // check if track changed and redraw if needed
+  if (lastElapsed > player_GetElapsedSec()) {
+    Serial.println("[nowPlaying] track changed, updating static elements");
+    drawStatic();
+  }
+  
   // refresh dynamic elements once per second
   uint32_t now = millis();
   if (now - lastUpdateMs >= UPDATE_INTERVAL_MS) {

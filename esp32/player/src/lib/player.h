@@ -33,6 +33,13 @@ void player_Stop(void);
 // Drive audio pipeline, called every loop()
 void player_Update(void);
 
+// Set the queue
+PlayerResult player_SetQueue(const char* albumPath, char tracks[][128], int trackCount, int startIdx);
+
+// Get queue info
+int player_GetQueueIndex(void);
+int player_GetQueueCount(void);
+
 // Status query
 PlayerState player_GetState(void);
 

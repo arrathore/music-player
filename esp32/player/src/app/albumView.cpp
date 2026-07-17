@@ -1,7 +1,9 @@
 #include "albumView.h"
+
 #include "appManager.h"
 #include "../driver/display.h"
 #include "../driver/sdCard.h"
+#include "../lib/player.h"
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -313,15 +315,13 @@ void AlbumViewApp::cursorUp() {
   }
 }
 
+// start playing album in order from user selection
 void AlbumViewApp::enter() {
   if (trackCount == 0) return;
-  // TODO: build full path and open in player
-  // char fullPath[320];
-  // snprintf(fullPath, sizeof(fullPath), "%s/%s", albumPath, tracks[selectedIdx]);
-  // player_Open(fullPath);
-  // appManager_SwitchTo(appManager_GetNowPlaying());
   Serial.printf("[albumView] selected track: %s/%s\n", albumPath, tracks[selectedIdx]);
 
+  player_SetQueue(albumPath, tracks, trackCount, selectedIdx);
+  appManager_SwitchTo(appManager_GetNowPlaying());
 }
 
 void AlbumViewApp::exit() {
