@@ -7,6 +7,13 @@ from fastapi.responses import FileResponse
 
 app = FastAPI(title="SD music manager")
 
+# API routers
+app.include_router(scanner_router, prefix="/api")
+# app.include_router(sdcard_router, prefix="/api")
+# app.include_router(exporter_router, prefix="/api")
+# app.include_router(settings_router, prefix="/api")
+
+
 # serve frontend
 app.mount("/static", StaticFiles(directory="client"), name="static")
 
