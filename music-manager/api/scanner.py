@@ -257,7 +257,7 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
 
     # derive album metadata from the first successfully read file
     album_title = folder.name
-    album_arist = ""
+    album_artist = ""
     album_year = ""
     album_genre = ""
 

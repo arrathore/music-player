@@ -5,6 +5,11 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
+from api.scanner import router as scanner_router
+# from api.sdcard import router as sdcard_router
+# from api.exporter import router as exporter_router
+# from api.settings import router as settings_router
+
 app = FastAPI(title="SD music manager")
 
 # API routers
@@ -31,5 +36,5 @@ if __name__ == "__main__":
     timer = threading.Timer(1.0, open_browser)
     timer.start()
 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
