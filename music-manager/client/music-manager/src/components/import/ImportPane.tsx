@@ -1,6 +1,12 @@
 import "./ImportPane.css";
 
+import AlbumGrid from "../AlbumGrid";
+import { Album } from "../../types/Album";
+
+
 function ImportPane() {
+  const albums: Album[] = [];
+  
   return (
     <div className="ImportPane">
       <header className="pane-header">
@@ -27,9 +33,9 @@ function ImportPane() {
       </div>
 
       <div className="album-area">
-	<p className="empty-message">
-	  no albums added yet.
-	</p>
+	<AlbumGrid
+	  albums={albums}
+	  emptyMessage="no albums added yet." />
       </div>
     </div>
   );

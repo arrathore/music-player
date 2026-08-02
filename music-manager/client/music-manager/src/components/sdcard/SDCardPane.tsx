@@ -5,6 +5,7 @@ function SDCardPane() {
     <div className="SDCardPane">
       <header className="pane-header">
 	<h2>sd card</h2>
+	<button className="primary-button">export</button>
       </header>
 
       <div className="sdcard-controls">
