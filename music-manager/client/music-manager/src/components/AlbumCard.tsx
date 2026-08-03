@@ -1,3 +1,5 @@
+import "./AlbumCard.css";
+
 import { Album } from "../types/Album";
 
 interface AlbumCardProps {
