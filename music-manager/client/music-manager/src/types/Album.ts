@@ -6,7 +6,7 @@ export interface Album {
 
   cover_data?: string;
 
-  trackCount: number;
+  track_count: number;
 
   state?: "ready" | "duplicate" | "needs-metadata";
 }

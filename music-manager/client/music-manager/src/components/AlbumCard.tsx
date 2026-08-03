@@ -30,7 +30,7 @@ function AlbumCard({ album, onClick }: AlbumCardProps) {
 
 	      <p>{album.artist}</p>
 
-	      <span>{album.trackCount} tracks</span>
+	      <span>{album.track_count} tracks</span>
 
 	      {album.state === "duplicate" && (
 	      <span className="album-warning">

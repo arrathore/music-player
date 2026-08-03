@@ -35,6 +35,7 @@ class Album(BaseModel):
     cover_data: Optional[str] # base64 encoded thumbnail, None if no cover (complete data URL)
     cover_source: str         # "embedded" | "file" | "none"
     tracks: list[Track]
+    track_count: int
 
 class ScanRequest(BaseModel):
     paths: list[str]
@@ -310,6 +311,7 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
         cover_data=cover_data,
         cover_source=cover_source,
         tracks=tracks,
+        track_count=len(tracks),
     ), None
 
 # scan one or more album folders and return Album objects    

@@ -17,6 +17,7 @@ function ImportPane() {
     if (!path) return;
 
     const result = await scanFolders([path]);
+    console.log(result);
     setAlbums(result.albums);
     setErrors(result.errors);
   }
