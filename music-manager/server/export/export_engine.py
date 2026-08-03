@@ -109,7 +109,7 @@ def _run_export(request):
                     raise ExportCancelled()
 
                 output_track = transcode_track(
-                    track, album_dir, request.options,
+                    track, album, album_dir, request.options,
                 )
 
                 exported_tracks.append(output_track.name)

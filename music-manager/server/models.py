@@ -1,6 +1,7 @@
 # classes used throughout the application
 
 from pydantic import BaseModel
+from typing import Optional
 
 class Track(BaseModel):
     filename: str             # original filename on disk

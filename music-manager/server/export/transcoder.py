@@ -2,12 +2,13 @@ from pathlib import Path
 import subprocess
 import shutil
 
-from models import Track
+from models import Track, Album
 
 # convert a track into the requested format
 # returns the path in the exported file
 def transcode_track(
         track: Track,
+        album: Album,
         output_dir: Path,
         options,
 ) -> Path:
@@ -28,9 +29,18 @@ def transcode_track(
         "ffmpeg", "-y", "-i", track.path,
     ]
 
+    # take only audio stream
+    cmd += [
+        "-map", "0:a",
+    ]
+    
     # metadata
     cmd += [
+        "-map_metadata", "-1", # remove existing metadata
         "-metadata", f"title={track.title}",
+        "-metadata", f"artist={album.artist}",
+        "-metadata", f"album={album.title}",
+        "-metadata", f"duration={track.duration}",
     ]
 
     if track.track_number:
@@ -39,6 +49,7 @@ def transcode_track(
             f"track={track.track_number}",
         ]
 
+        
     # bitrate
     if output_format == "mp3":
         cmd += [

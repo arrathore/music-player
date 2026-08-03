@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from export import export_engine
 from models import Track, Album
 
-router = APIRouter()
+router = APIRouter(prefix="/export", tags=["export"])
 
 class ExportOptions(BaseModel):
     format: str
