@@ -1,17 +1,32 @@
 import "./ImportPane.css";
 
+import { useState } from "react";
+
 import AlbumGrid from "../AlbumGrid";
 import { Album } from "../../types/Album";
-
+import "../../api/scanner.ts";
+import { scanFolders } from "../../api/scanner";
 
 function ImportPane() {
-  const albums: Album[] = [];
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  async function handleAddAlbums() {
+    const path = prompt("album folder");
+    
+    if (!path) return;
+
+    const result = await scanFolders([path]);
+    setAlbums(result.albums);
+    setErrors(result.errors);
+  }
   
   return (
     <div className="ImportPane">
       <header className="pane-header">
 	<h2>import</h2>
-	<button className="primary-button">+ add albums</button>
+	<button className="primary-button"
+	  onClick={handleAddAlbums}>+ add albums</button>
       </header>
 
       <div className="import-settings">
