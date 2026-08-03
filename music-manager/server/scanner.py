@@ -122,7 +122,7 @@ def find_folder_cover(folder: Path) -> Optional[str]:
 def get_tag(mutagenFile, *keys: str, default: str = "") -> str:
     if not mutagenFile or not mutagenFile.tags:
         return default
-    for f in keys:
+    for key in keys:
         try:
             val = mutagenFile.tags.get(key)
             if val is None:
@@ -131,7 +131,7 @@ def get_tag(mutagenFile, *keys: str, default: str = "") -> str:
             if hasattr(val, "text") and val.text:
                 return str(val.text[0]).strip()
             # MP4 / FLAC / OGG values are lists
-            if isInstance(val, list) and val:
+            if isinstance(val, list) and val:
                 return str(val[0]).strip()
             return str(val).strip()
         except Exception:
@@ -253,7 +253,7 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
         return None, f"Failed to read any tracks in: {folder_path}"
 
     # sort by track number, falling back to filename order for ties / zeros
-    track.sort(key=lambda t: (t.track_number if t.track_number > 0 else 9990, t.filename))
+    tracks.sort(key=lambda t: (t.track_number if t.track_number > 0 else 9990, t.filename))
 
     # derive album metadata from the first successfully read file
     album_title = folder.name
@@ -289,17 +289,17 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
             if cover_data:
                 cover_source = "file"
 
-        return Album(
-            id=str(uuid.uuid4()),
-            source_path=str(folder),
-            title=album_title,
-            artist=album_artist,
-            year=album_year,
-            genre=album_genre,
-            cover_data=cover_data,
-            cover_source=cover_source,
-            tracks=tracks,
-        ), None
+    return Album(
+        id=str(uuid.uuid4()),
+        source_path=str(folder),
+        title=album_title,
+        artist=album_artist,
+        year=album_year,
+        genre=album_genre,
+        cover_data=cover_data,
+        cover_source=cover_source,
+        tracks=tracks,
+    ), None
 
 # scan one or more album folders and return Album objects    
 @router.post("/scan-folders", response_model=ScanResponse)
@@ -326,7 +326,7 @@ def update_album(req: UpdateAlbumRequest):
 
     # id check
     if not album.id:
-        album.id = str(uuid.uuid64())
+        album.id = str(uuid.uuid4())
 
     # ensure track list is not empty
     if not album.tracks:

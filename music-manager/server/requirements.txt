@@ -2,4 +2,5 @@ uvicorn
 fastapi
 mutagen
 pillow
+uvicorn
 
