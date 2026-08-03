@@ -13,12 +13,19 @@
     align-items: center;
 }
 
-.import-settings {
+.header-buttons {
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    gap: 0.5rem;
+}
+
+.export-settings {
     display: flex;
     gap: 1rem;
 }
 
-.import-settings label {
+.export-settings label {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

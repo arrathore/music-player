@@ -26,11 +26,15 @@ function ImportPane() {
     <div className="ImportPane">
       <header className="pane-header">
 	<h2>import</h2>
-	<button className="primary-button"
-	  onClick={handleAddAlbums}>+ add albums</button>
+	<div className="header-buttons">
+	  <button className="primary-button"
+	    onClick={handleAddAlbums}>+ add albums</button>
+	  <button className="export-button">export to SD card</button>
+	</div>
+
       </header>
 
-      <div className="import-settings">
+      <div className="export-settings">
 	<label>
 	  format
 	  <select defaultValue="mp3">

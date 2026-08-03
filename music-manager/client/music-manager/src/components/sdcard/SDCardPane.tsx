@@ -4,10 +4,9 @@ function SDCardPane() {
   return (
     <div className="SDCardPane">
       <header className="pane-header">
-	<h2>sd card</h2>
-	<button className="primary-button">export</button>
+	<h2>SD card</h2>
       </header>
-
+      
       <div className="sdcard-controls">
 	<label htmlFor="drive-select">drive</label>
 	<select id="drive-select" defaultValue="">
