@@ -32,7 +32,7 @@ class Album(BaseModel):
     artist: str
     year: str
     genre: str
-    cover_data: Optional[str] # base64 encoded thumbnail, None if no cover
+    cover_data: Optional[str] # base64 encoded thumbnail, None if no cover (complete data URL)
     cover_source: str         # "embedded" | "file" | "none"
     tracks: list[Track]
 
@@ -92,6 +92,11 @@ def extract_embedded_cover(mutagenFile) -> Optional[str]:
             # MP4 cover (M4A)
             if "covr" in mutagenFile.tags:
                 cover_data = mutagenFile.tags["covr"][0]
+
+                print(type(cover_data))
+                print(cover_data.imageformat)
+                print(len(cover_data))
+                
                 img = Image.open(io.BytesIO(bytes(cover_data)))
                 return encode_image(img)
 
@@ -267,7 +272,8 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
             if mf and mf.tags:
                 album_title, album_artist, album_year, album_genre = derive_album_meta(mf, folder)
                 break
-        except Exception:
+        except Exception as e:
+            print(e)
             continue
 
     # cover art
@@ -281,14 +287,19 @@ def scan_folder(folder_path: str) -> tuple[Optional[Album], Optional[str]]:
             if cover_data:
                 cover_source = "embedded"
                 break
-        except Exception:
+        except Exception as e:
+            print(e)
             continue
 
-        if not cover_data: # folder file
-            cover_data = find_folder_cover(folder)
-            if cover_data:
-                cover_source = "file"
+    if not cover_data: # folder file
+        cover_data = find_folder_cover(folder)
+        if cover_data:
+            cover_source = "file"
 
+    # convert to complete data URL
+    if cover_data is not None:
+        cover_data = f"data:image/jpeg;base64,{cover_data}"
+            
     return Album(
         id=str(uuid.uuid4()),
         source_path=str(folder),

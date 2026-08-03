@@ -4,7 +4,7 @@ export interface Album {
   title: string;
   artist: string;
 
-  cover?: string;
+  cover_data?: string;
 
   trackCount: number;
 

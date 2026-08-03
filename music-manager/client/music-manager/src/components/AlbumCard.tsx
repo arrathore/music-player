@@ -14,9 +14,9 @@ function AlbumCard({ album, onClick }: AlbumCardProps) {
 
 	    
 	    <div className="album-cover">
-	      {album.cover ? (
+	      {album.cover_data ? (
 	      <img
-		src={album.cover}
+		src={album.cover_data}
 		alt={`${album.title} cover`} />
 	      ) : (
 	      <div className="album-cover-placeholder">
