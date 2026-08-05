@@ -3,4 +3,5 @@ fastapi
 mutagen
 pillow
 uvicorn
+psutil
 

@@ -7,8 +7,8 @@ import threading
 import zipfile
 
 from export.transcoder import transcode_track
-from export.meta import write_meta
-from export.cover import write_cover
+from meta import write_meta
+from cover import write_cover
 
 class ExportCancelled(Exception):
     pass
