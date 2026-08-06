@@ -45,7 +45,7 @@ function SDCardPane() {
   return (
     <div className="SDCardPane">
       <header className="pane-header">
-	<h2>SD card</h2>
+	<h2>SD card contents</h2>
       </header>
       
       <div className="sdcard-controls">

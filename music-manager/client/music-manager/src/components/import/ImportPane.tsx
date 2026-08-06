@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import AlbumGrid from "../AlbumGrid";
 import { Album } from "../../types/Album";
+import AlbumEditorDialog from "../AlbumEditor/AlbumEditorDialog";
 
 import { scanFolders } from "../../api/scanner";
 import { startExport, getExportProgress, downloadExport } from "../../api/exporter";
@@ -14,6 +15,8 @@ function ImportPane() {
 
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
 
   async function handleAddAlbums() {
     const path = prompt("album folder");
@@ -97,7 +100,21 @@ function ImportPane() {
       <div className="album-area">
 	<AlbumGrid
 	  albums={albums}
+	  onAlbumClick={setSelectedAlbum}
 	  emptyMessage="no albums added yet." />
+
+	{selectedAlbum && (
+	  <AlbumEditorDialog
+	    album={selectedAlbum}
+	    onClose={() => setSelectedAlbum(null)}
+	    onSave={(updatedAlbum) => {
+	      setAlbums(current =>
+		current.map(album =>
+		  album.id === updatedAlbum.id ? updatedAlbum : album));
+	      
+	      setSelectedAlbum(null);
+	    }} />
+	)}
       </div>
     </div>
   );
