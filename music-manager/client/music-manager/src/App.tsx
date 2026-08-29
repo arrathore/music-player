@@ -8,6 +8,7 @@ import SDCardPane from "./components/sdcard/SDCardPane";
 function App() {
   return (
     <div className="App">
+      <title>music manager</title>
       <TitleBar />
       <div id="main">
 	<div className="pane">
