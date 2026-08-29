@@ -1,7 +1,0 @@
-uvicorn
-fastapi
-mutagen
-pillow
-uvicorn
-psutil
-
